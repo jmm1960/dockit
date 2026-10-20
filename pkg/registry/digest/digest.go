@@ -1,7 +1,6 @@
 package digest
 
 import (
-	"crypto/tls"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -87,9 +86,8 @@ func GetDigest(url string, token string) (string, error) {
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
-		TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
 	}
-	client := &http.Client{Transport: tr}
+	client := &http.Client{Transport: tr, Timeout: 30 * time.Second}
 
 	req, _ := http.NewRequest("HEAD", url, nil)
 	req.Header.Set("User-Agent", meta.UserAgent)

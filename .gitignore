@@ -1,3 +1,13 @@
+# Upstream source code retained locally for implementation research.
+/research/upstream/
+/research/
+/deploy/sr_pve_ubuntu/
+/dockit
+/.env
+.env
+__pycache__/
+
+# Upstream build outputs
 watchtower
 watchtower.exe
 vendor

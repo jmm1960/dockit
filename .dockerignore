@@ -1,0 +1,9 @@
+.git
+.env
+research
+deploy
+dist
+watchtower
+dockit
+coverage.out
+oryxBuildBinary
