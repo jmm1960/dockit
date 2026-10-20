@@ -7,6 +7,10 @@ on:
         description: Preview deletions without changing the package
         type: boolean
         default: true
+      minimum_age_minutes:
+        description: Minimum age of unused versions (use 0 after publication has finished)
+        type: number
+        default: 60
 
 permissions:
   contents: read
@@ -25,4 +29,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DRY_RUN: ${{ inputs.dry_run }}
+          MINIMUM_AGE_MINUTES: ${{ inputs.minimum_age_minutes }}
         run: python3 .github/scripts/cleanup_images.py

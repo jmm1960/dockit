@@ -77,7 +77,10 @@ def main():
         raise RuntimeError('No tagged versions found; refusing cleanup')
     protected = reachable(roots, manifest)
     # Avoid new uploads that might belong to an in-progress publication.
-    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1)
+    minimum_age = int(os.environ.get('MINIMUM_AGE_MINUTES', '60'))
+    if minimum_age < 0:
+        raise ValueError('Minimum age must not be negative')
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=minimum_age)
     candidates = [v for v in inventory if v['name'] not in protected
                   and not v['metadata']['container']['tags']
                   and datetime.datetime.fromisoformat(v['created_at'].replace('Z', '+00:00')) < cutoff]
