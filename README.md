@@ -164,9 +164,12 @@ It also checks that update-disabled and manually stopped containers are left alo
 Test resources are removed on completion; `dockit:local` remains available for reuse.
 See [local integration testing](docs/local-testing.md) for requirements and options.
 
-GitHub Actions runs the test suite and publishes multi-platform images on pushes to
-`main`. Each publication includes `latest` and `sha-<full-commit-id>` tags. Use a
-commit tag or image digest when a fixed deployment version is required.
+GitHub Actions skips documentation-only changes. Test and development-tool changes
+run the test suite without publishing an image. Runtime Go code, dependencies,
+Docker build inputs, and publication workflow changes trigger a multi-platform
+image build after tests pass. Version tags and manual workflow runs also publish.
+Each publication includes `latest` and `sha-<full-commit-id>` tags. Use a commit tag
+or image digest when a fixed deployment version is required.
 
 ## Acknowledgments and license
 

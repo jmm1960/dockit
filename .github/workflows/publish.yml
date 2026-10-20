@@ -4,8 +4,14 @@ on:
   push:
     branches: [main]
     tags: ['v*']
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   pull_request:
     branches: [main]
+    paths-ignore:
+      - '**/*.md'
+      - 'docs/**'
   workflow_dispatch:
 
 permissions:
@@ -18,8 +24,19 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
+    outputs:
+      image_changed: ${{ steps.changes.outputs.image_changed }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Check image build inputs
+        id: changes
+        run: |
+          image_changed="$(python3 .github/scripts/image_changes.py)"
+          echo "image_changed=$image_changed" >> "$GITHUB_OUTPUT"
+      - name: Test workflow change detection
+        run: python3 -m unittest discover -s .github/scripts -p 'test_*.py'
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version: '1.26.x'
@@ -31,6 +48,7 @@ jobs:
 
   image:
     needs: test
+    if: needs.test.outputs.image_changed == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
