@@ -152,6 +152,18 @@ To build a local image:
 docker build -t dockit:local .
 ```
 
+For a complete local Docker integration test:
+
+```sh
+make integration
+```
+
+This builds the source image and verifies image replacement, named-volume and label
+preservation, scheduled restarts, and health recovery using disposable containers.
+It also checks that update-disabled and manually stopped containers are left alone.
+Test resources are removed on completion; `dockit:local` remains available for reuse.
+See [local integration testing](docs/local-testing.md) for requirements and options.
+
 GitHub Actions runs the test suite and publishes multi-platform images on pushes to
 `main`. Each publication includes `latest` and `sha-<full-commit-id>` tags. Use a
 commit tag or image digest when a fixed deployment version is required.
